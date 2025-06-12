@@ -87,7 +87,7 @@ export const requestResetPassword = async (email) => {
   const jwtToken = jwt.sign(
     { sub: user._id, email: user.email },
     getEnvVar('JWT_SECRET'),
-    { expiresIn: '15m' },
+    { expiresIn: '5m' },
   );
 
   const link = `${getEnvVar('APP_DOMAIN')}/reset-password?token=${jwtToken}`;
