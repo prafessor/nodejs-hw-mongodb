@@ -1,11 +1,15 @@
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import createHttpError from 'http-errors';
+import jwt from 'jsonwebtoken';
 
 import { FIFTEEN_MINUTES, THIRTY_DAYS } from '../constants/index.js';
 
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
+
+import { sendEmail } from '../utils/sendEmail.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
 
 export const registerUser = async (payload) => {
   const user = await User.findOne({ email: payload.email });
@@ -72,4 +76,46 @@ export const refreshSession = async (sessionId, refreshToken) => {
 
 export const logoutUser = async (sessionId, refreshToken) => {
   await Session.deleteOne({ _id: sessionId, refreshToken });
+};
+
+export const requestResetPassword = async (email) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new createHttpError(404, 'User not found!');
+  }
+  const jwtToken = jwt.sign(
+    { sub: user._id, email: user.email },
+    getEnvVar('JWT_SECRET'),
+    { expiresIn: '15m' },
+  );
+
+  const link = `${getEnvVar('APP_DOMAIN')}/reset-password?token=${jwtToken}`;
+
+  await sendEmail({
+    from: getEnvVar('SMTP_FROM'),
+    to: user.email,
+    subject: 'Reser password',
+    html: `<p>Click to change password <a href="${link}">here</a></p>`,
+  });
+};
+
+export const resetPassword = async (password, token) => {
+  let decoded;
+
+  try {
+    decoded = jwt.verify(token, getEnvVar('JWT_SECRET'));
+  } catch {
+    throw new createHttpError(401, 'Token is expired or invalid');
+  }
+
+  const user = await User.findOne({ _id: decoded.sub });
+  if (!user) {
+    throw new createHttpError(404, 'User not found!');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await User.updateOne({ _id: user._id }, { password: hashedPassword });
+  await Session.deleteMany({ userId: user._id });
 };
