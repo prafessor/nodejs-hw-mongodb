@@ -1,0 +1,76 @@
+tags:
+  - Auth
+summary: Reset password
+operationId: reset-pwd
+description: Reset password
+security: []
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - password
+          - token
+        properties:
+          password:
+            type: string
+            description: New password
+            example: Tm6rz3DxXc
+          token:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODQ5NmNjYjhiMDEwZWQ5MjFkODU4MjciLCJlbWFpbCI6ImxvcmVtYWl0cnlAZ21haWwuY29tIiwiaWF0IjoxNzQ5NzI2NDQ0LCJleHAiOjE3NDk3MjY3NDR9.DStjzMmJCMeEdlU_lSHFHHjrQfYtVVR431aFIebntbY
+responses:
+  '200':
+    description: Password has been successfully reset
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Password has been successfully reset.
+            data:
+              type: object
+  '401':
+    description: Token is expired or invalid
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: Token is expired or invalid
+  '404':
+    description: User not found
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: User not found!
+  '500':
+    $ref: ../../../components/responses/500.yaml

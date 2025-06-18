@@ -1,0 +1,69 @@
+tags:
+  - Auth
+summary: Log in
+operationId: login
+description: Log in to user`s acount
+security: []
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - email
+          - password
+        properties:
+          email:
+            type: string
+            format: email
+            description: User`s email
+            example: anonim@gmail.com
+          password:
+            type: string
+            description: User`s password
+            example: Tm6rz3DxXc
+responses:
+  '200':
+    description: Logged in to acount
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully logged in an user!
+            data:
+              type: object
+              required:
+              - accessToken
+              properties:
+                accessToken:
+                  type: string
+                  description: Acceess token
+                  example: P9wMshqVltm2Pv3GtngNwkLB2WOaglAH91jyumMl
+  "401":
+    description: Email or password is incorrect
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: Email or password is incorrect
+  '500':
+    $ref: ../../../components/responses/500.yaml

@@ -1,0 +1,67 @@
+tags:
+  - Auth
+summary: Refresh access token
+operationId: refresh
+description: Refresh access token
+security: []
+responses:
+  '200':
+    description: Refreshed a session
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully refreshed a session!
+            data:
+              type: object
+              required:
+                - accessToken
+              properties:
+                accessToken:
+                  type: string
+                  description: Acceess token
+                  example: P9wMshqVltm2Pv3GtngNwkLB2WOaglAH91jyumMl
+  '401':
+    description: Session not found
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: Session not found
+  '403':
+    description: Session token is expired
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 403
+            message:
+              type: string
+              example: Session token is expired
+  '500':
+    $ref: ../../../components/responses/500.yaml

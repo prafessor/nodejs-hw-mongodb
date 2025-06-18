@@ -1,0 +1,96 @@
+tags:
+  - Auth
+summary: Register user
+operationId: register
+description: Register user
+security: []
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - email
+          - password
+        properties:
+          name:
+            type: string
+            description: User name
+            example: Tony Stark
+          email:
+            type: string
+            format: email
+            description: User email
+            example: anonim@gmail.com
+          password:
+            type: string
+            description: User password
+            example: Tm6rz3DxXc
+responses:
+  '201':
+    description: Registered a user
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully registered a user!
+            data:
+              type: object
+              required:
+                - _id
+                - name
+                - email
+                - createdAt
+                - updatedAt
+              properties:
+                _id:
+                  type: string
+                  description: User`s Id
+                  example: 682394bf1bb6f80c997b44c8
+                name:
+                  type: string
+                  description: User`s name
+                  example: Anonim
+                email:
+                  type: string
+                  description: User`s email
+                  example: anonim@gmail.com
+                createdAt:
+                  type: string
+                  format: data-time
+                  description: User was created at
+                  example: 2025-06-12T21:14:38.439+00:00
+                updatedAt:
+                  type: string
+                  format: data-time
+                  description: User was updated at
+                  example: 2025-07-12T21:14:38.439+00:00
+  '409':
+    description: Email has already used
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 409
+            message:
+              type: string
+              example: Email is use
+  '500':
+    $ref: ../../../components/responses/500.yaml

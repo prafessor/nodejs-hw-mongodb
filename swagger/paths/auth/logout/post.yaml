@@ -1,0 +1,11 @@
+tags:
+  - Auth
+summary: Log out
+operationId: logout
+description: Log out from acount
+security: []
+responses:
+  '204':
+    description: Logged out from  acount
+  '500':
+    $ref: ../../../components/responses/500.yaml
