@@ -13,8 +13,8 @@ tags:
     description: Operation of authentication
 
 servers:
-  - url: http://localhost:8080
   - url: https://contactsbook-app.onrender.com
+  - url: http://localhost:8080
 paths:
   /contacts/{id}:
     get:
